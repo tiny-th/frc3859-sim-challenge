@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.List;
 
 public class Robot extends TimedRobot {
@@ -36,7 +37,7 @@ public class Robot extends TimedRobot {
         TrajectoryGenerator.generateTrajectory(
             new Pose2d(2, 2, Rotation2d.kZero),
             List.of(),
-            new Pose2d(6, 4, Rotation2d.kZero),
+            new Pose2d(2, 3, Rotation2d.kZero),
             new TrajectoryConfig(2, 2));
   }
 
@@ -48,29 +49,51 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_timer.restart();
-    m_drive.resetOdometry(m_trajectory.getInitialPose());
   }
 
   @Override
   public void autonomousPeriodic() {
+    //Drive at max speed until two seconds is up, then set speed to 0
+    System.out.println(m_timer.get());
     double elapsed = m_timer.get();
-    Trajectory.State reference = m_trajectory.sample(elapsed);
-    ChassisSpeeds speeds = m_feedback.calculate(m_drive.getPose(), reference);
-    m_drive.drive(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    if (elapsed <= 2)
+    {
+      m_drive.drive(Drivetrain.kMaxSpeed, 0);
+    }
+    else
+    {
+      m_drive.drive(0, 0);
+    }
   }
 
   @Override
   public void teleopPeriodic() {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    double xSpeed = -m_speedLimiter.calculate(m_controller.getLeftY()) * Drivetrain.kMaxSpeed;
-
+    // When Button 4 is pressed (mapped to v), halve forward/backward inputs (w/s).
+    double HALF = 0.5;
+    double xSpeed;
+    if (m_controller.getRawButton(4))
+    {
+      xSpeed = -m_speedLimiter.calculate(HALF * m_controller.getLeftY()) * Drivetrain.kMaxSpeed;
+    }
+    else
+    {
+      xSpeed = -m_speedLimiter.calculate(m_controller.getLeftY()) * Drivetrain.kMaxSpeed;
+    }
+    SmartDashboard.putBoolean("Slow Mode", m_controller.getRawButton(4));
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
     double rot = -m_rotLimiter.calculate(m_controller.getRightX()) * Drivetrain.kMaxAngularSpeed;
     m_drive.drive(xSpeed, rot);
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    //No driving during this period
+    m_drive.drive(0, 0);
   }
 
   @Override
