@@ -1,4 +1,4 @@
-#frc3859-sim-challenge
+# frc3859-sim-challenge
 
 WPILib: v2026.2.1  
 Run Steps:  
@@ -7,7 +7,7 @@ Run Steps:
 - Select "Sim GUI" and click "OK"
 - If the simulation does not appear, select "NetworkTables" -> "SmartDashboard" -> "Field"
 - Choose between "Disabled," "Autonomous," and 'Teleoperated" states in the "Robot State" window
-- To see values displayed in the simulation, select "NetworkTables" -> "NetworkTables View" -> "SmartDashboard"
+- To see values displayed in the simulation, select "NetworkTables" -> "NetworkTables View" -> "SmartDashboard"  
 Keyboard Mapping:  
 - Axis 1: Increase - S, Decrease - W
 - Axis 2: Increaes - R, Decrease - E
