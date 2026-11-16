@@ -18,7 +18,7 @@ Keyboard Mapping:
 - Button 2: X
 - Button 3: C
 - Button 4: V
-- POV 0;
+- POV 0:
     - 0 deg: 8
     - 45 deg: 9
     - 90 deg: 6
