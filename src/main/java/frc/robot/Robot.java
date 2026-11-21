@@ -56,15 +56,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //Drive at max speed until two seconds is up, then set speed to 0
-    //System.out.println(m_timer.get());
-    double elapsed = m_timer.get();
-    if (elapsed <= 2)
+    if (m_timer.hasElapsed(2))
     {
-      m_drive.drive(Drivetrain.kMaxSpeed, 0);
+      m_drive.drive(0, 0);
     }
     else
     {
-      m_drive.drive(0, 0);
+      m_drive.drive(Drivetrain.kMaxSpeed, 0);
     }
   }
 
